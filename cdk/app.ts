@@ -24,6 +24,10 @@ new InfrastructurePipelineStack(app, `${config.resourcePrefix}-Pipeline`, {
         account: process.env.CDK_DEFAULT_ACCOUNT,
         region: process.env.CDK_DEFAULT_REGION,
     },
+    infraCodeSource: config.infraCodeSource,
+    infraGithubRepoName: config.infraGithubRepoName,
+    infraGithubUserName: config.infraGithubUserName,
+    infraCodeStarConnectionARN: config.infraCodeStarConnectionARN,
 });
 
 export interface Config {

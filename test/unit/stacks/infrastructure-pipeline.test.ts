@@ -53,6 +53,47 @@ test("InfrastructurePipeline works with CodeCommit", () => {
             } as Environment,
         ],
         resourcePrefix: "test",
+        infraCodeSource: "CodeCommit",
+        infraGithubUserName: "test-user",
+        infraGithubRepoName: "test-repo",
+        infraCodeStarConnectionARN: "test-connection-arn",
+    });
+
+    const template = Template.fromStack(pipelineStack);
+    template.resourceCountIs("AWS::CodePipeline::Pipeline", 1);
+});
+
+test("InfrastructurePipeline works with GitHub", () => {
+    (ssm.StringParameter.valueFromLookup as jest.Mock)
+        .mockReturnValueOnce("betaAccount")
+        .mockReturnValueOnce("gammaAccount")
+        .mockReturnValueOnce("prodAccount");
+
+    const app = new cdk.App();
+
+    const pipelineStack = new InfrastructurePipelineStack(app, "InfrastructurePipeline", {
+        coreInfraRepoName: "edk-core-infrastructure",
+        infrastructurePipelineStage: TestInfrastructurePipelineStage,
+        servicesRepoName: "edk-services",
+        stageProps: {
+            createUserPool: true,
+            resourcePrefix: "test",
+        },
+        env: {
+            account: "test-account",
+            region: "us-west-2",
+        },
+        environmentAccounts: [
+            {
+                accountName: "dev1",
+                accountSsmKey: "/account/dev1",
+            } as Environment,
+        ],
+        resourcePrefix: "test",
+        infraCodeSource: "GitHub",
+        infraGithubUserName: "test-user",
+        infraGithubRepoName: "test-repo",
+        infraCodeStarConnectionARN: "test-connection-arn",
     });
 
     const template = Template.fromStack(pipelineStack);
@@ -83,6 +124,10 @@ test("InfrastructurePipeline should add deployment stages to pipeline", () => {
             } as Environment,
         ],
         resourcePrefix: "test",
+        infraCodeSource: "CodeCommit",
+        infraGithubUserName: "test-user",
+        infraGithubRepoName: "test-repo",
+        infraCodeStarConnectionARN: "test-connection-arn",
     });
 
     const template = Template.fromStack(pipelineStack);

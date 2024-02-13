@@ -7,7 +7,6 @@ import { Construct } from "constructs";
 import { Environment } from "../app";
 import { retrieveAccount } from "../lib/ssm-account-retriever";
 import { SharedResourceStageProps } from "../stages/shared-resource";
-import * as config from "../config.json";
 
 export class InfrastructurePipelineStage extends Stage {}
 
@@ -19,6 +18,10 @@ export interface InfrastructurePipelineStackProps extends cdk.StackProps {
     readonly stageProps: SharedResourceStageProps;
     readonly userPoolDomainPrefix?: string;
     readonly environmentAccounts: Environment[] | [];
+    readonly infraCodeSource: string;
+    readonly infraGithubRepoName: string;
+    readonly infraGithubUserName: string;
+    readonly infraCodeStarConnectionARN: string;
 }
 
 export class InfrastructurePipelineStack extends cdk.Stack {
@@ -40,12 +43,12 @@ export class InfrastructurePipelineStack extends cdk.Stack {
             repositoryName: props.servicesRepoName,
         } as codecommit.RepositoryProps);
 
-        if (config.infraCodeSource === "GitHub") {
+        if (props.infraCodeSource === "GitHub") {
             source = pipelines.CodePipelineSource.connection(
-                `${config.infraGithubUserName}/${config.infraGithubRepoName}`,
+                `${props.infraGithubUserName}/${props.infraGithubRepoName}`,
                 repoBranch,
                 {
-                    connectionArn: config.infraCodeStarConnectionARN,
+                    connectionArn: props.infraCodeStarConnectionARN,
                 }
             );
         } else {
