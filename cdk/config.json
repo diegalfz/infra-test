@@ -1,1 +1,11 @@
-{"resourcePrefix":"edk-test","createUserPool":false,"infraCodeSource":"GitHub","infraCodeStarConnectionARN":"arn:aws:codestar-connections:us-east-1:188841719918:connection/e38418ac-7e2f-4d72-a3d9-586ef511d896","infraGithubRepoName":"infra-test","infraGithubUserName":"diegalfz","servicesRepoName":"services","coreInfraRepoName":"core-infrastructure","environmentAccounts":[{"accountSsmKey":"/account/gamma","accountName":"gamma"}]}
+{
+    "resourcePrefix": "edk-test",
+    "createUserPool": false,
+    "infraCodeSource": "GitHub",
+    "infraCodeStarConnectionARN": "arn:aws:codestar-connections:us-east-1:905418170299:connection/3fcfda85-7064-41c6-b707-873713e7e0d6",
+    "infraGithubRepoName": "infra-test",
+    "infraGithubUserName": "diegalfz",
+    "servicesRepoName": "services",
+    "coreInfraRepoName": "core-infrastructure",
+    "environmentAccounts": [{ "accountSsmKey": "/account/gamma", "accountName": "gamma" }]
+}
