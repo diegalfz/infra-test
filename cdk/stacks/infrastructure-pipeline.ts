@@ -7,6 +7,7 @@ import { Construct } from "constructs";
 import { Environment } from "../app";
 import { retrieveAccount } from "../lib/ssm-account-retriever";
 import { SharedResourceStageProps } from "../stages/shared-resource";
+import * as config from "../config.json";
 
 export class InfrastructurePipelineStage extends Stage {}
 
@@ -26,6 +27,7 @@ export class InfrastructurePipelineStack extends cdk.Stack {
 
         const account = cdk.Stack.of(this).account;
         const region = cdk.Stack.of(this).region;
+        let source: pipelines.CodePipelineSource;
 
         // Create the repo containing core-infra
         const repoBranch = "main";
@@ -38,9 +40,21 @@ export class InfrastructurePipelineStack extends cdk.Stack {
             repositoryName: props.servicesRepoName,
         } as codecommit.RepositoryProps);
 
+        if (config.infraCodeSource === "GitHub") {
+            source = pipelines.CodePipelineSource.connection(
+                `${config.infraGithubUserName}/${config.infraGithubRepoName}`,
+                repoBranch,
+                {
+                    connectionArn: config.infraCodeStarConnectionARN,
+                }
+            );
+        } else {
+            source = pipelines.CodePipelineSource.codeCommit(coreInfraRepo, repoBranch);
+        }
+
         const deploymentPipeline = new DeploymentPipeline(this, `${props.resourcePrefix}-Pipeline`, {
             pipelineName: "InfrastructurePipeline",
-            primarySource: pipelines.CodePipelineSource.codeCommit(coreInfraRepo, repoBranch),
+            primarySource: source,
             buildProps: {
                 commands: [
                     "npm install -g pnpm@^8.2.0",
